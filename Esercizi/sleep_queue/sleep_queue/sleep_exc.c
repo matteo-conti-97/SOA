@@ -106,7 +106,7 @@ asmlinkage long sys_goto_sleep(void){
 
         //After wakeup, remove the node from the queue
         preempt_disable();
-        printk("%s: thread %d inserted in queue\n",MODNAME,current->pid);
+        printk("%s: thread %d removed from queue\n",MODNAME,current->pid);
         remove_node(current->pid, &head);
         spin_unlock(&queue_lock);
         preempt_enable();
