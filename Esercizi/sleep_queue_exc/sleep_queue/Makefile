@@ -15,5 +15,5 @@ clean:
 mount:
 	insmod the_sleep_exc.ko the_syscall_table=$(A)
 
-umount:
+unmount:
 	rmmod the_sleep_exc
