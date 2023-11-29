@@ -1,0 +1,1 @@
+cmd_/home/francesco/kernel-modules/LINUX-MODULES/kprobe-read-interceptor/hook.mod := { echo  /home/francesco/kernel-modules/LINUX-MODULES/kprobe-read-interceptor/hook.o;  echo; } > /home/francesco/kernel-modules/LINUX-MODULES/kprobe-read-interceptor/hook.mod

@@ -1,0 +1,1 @@
+cmd_/home/francesco/kernel-modules/LINUX-MODULES/printk-example/Module.symvers := sed 's/\.ko$$/\.o/' /home/francesco/kernel-modules/LINUX-MODULES/printk-example/modules.order | scripts/mod/modpost -m -a  -o /home/francesco/kernel-modules/LINUX-MODULES/printk-example/Module.symvers -e -i Module.symvers   -T -

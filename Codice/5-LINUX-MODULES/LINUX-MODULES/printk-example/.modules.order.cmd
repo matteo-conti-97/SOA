@@ -1,0 +1,1 @@
+cmd_/home/francesco/kernel-modules/LINUX-MODULES/printk-example/modules.order := {   echo /home/francesco/kernel-modules/LINUX-MODULES/printk-example/the_printk-example.ko; :; } | awk '!x[$$0]++' - > /home/francesco/kernel-modules/LINUX-MODULES/printk-example/modules.order
