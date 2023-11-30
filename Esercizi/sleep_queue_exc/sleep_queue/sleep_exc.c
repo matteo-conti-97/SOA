@@ -1,25 +1,4 @@
 /*
-* 
-* This is free software; you can redistribute it and/or modify it under the
-* terms of the GNU General Public License as published by the Free Software
-* Foundation; either version 3 of the License, or (at your option) any later
-* version.
-* 
-* This module is distributed in the hope that it will be useful, but WITHOUT ANY
-* WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-* A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-* 
-* @file virtual-to-physical-memory-mapper.c 
-* @brief This is the main source for the Linux Kernel Module which implements
-*       a system call that can be used to query the kernel for current mappings of virtual pages to 
-*	physical frames - this service is x86_64 specific in the curent implementation
-*
-* @author Francesco Quaglia
-*
-* @date November 10, 2021
-*/
-
-/*
 Blocking Queuing Service (BQS)
 This homework deals with the implementation of a Linux kernel subsystem dealing with thread management. 
 The subsystem should implement a blocking FIFO-queuing service. It is based on two system calls:
@@ -95,6 +74,7 @@ asmlinkage long sys_goto_sleep(void){
 
         //Add the new node to the queue
         preempt_disable();
+        spin_lock(&queue_lock);
         printk("%s: thread %d inserted in queue\n",MODNAME,current->pid);
         insert_node(&tail, new_node);
         spin_unlock(&queue_lock);
@@ -103,15 +83,15 @@ asmlinkage long sys_goto_sleep(void){
         //Sleep until awake is set to 0
         printk("%s: thread %d going to sleep\n",MODNAME,current->pid);
         wait_event_interruptible(queue, new_node->awake == 1);
-
+        
         //After wakeup, remove the node from the queue
         preempt_disable();
+        spin_lock(&queue_lock);
         printk("%s: thread %d removed from queue\n",MODNAME,current->pid);
         remove_node(current->pid, &head);
         spin_unlock(&queue_lock);
         preempt_enable();
         
-
 	return 0;
 	
 }
@@ -122,13 +102,19 @@ __SYSCALL_DEFINEx(1, _awake, unsigned long, none){
 asmlinkage long sys_awake(void){
 #endif
 
-	AUDIT{
-		printk("%s: ------------------------------\n",MODNAME);
-		printk("%s: asked to print e few messages\n",MODNAME);
-	}
-
-
-	printk(KERN_INFO "%s: AWAKE\n",MODNAME);
+        //Add the new node to the queue
+        preempt_disable();
+        spin_lock(&queue_lock);
+        if(head.next == &tail){
+                  printk("%s: queue is empty\n",MODNAME);
+                  spin_unlock(&queue_lock);
+                  preempt_enable();
+                  return -1;
+        }
+        head.next->awake = 1;
+        wake_up_process(head.next->task);
+        spin_unlock(&queue_lock);
+        preempt_enable();
 
 	return 0;
 	

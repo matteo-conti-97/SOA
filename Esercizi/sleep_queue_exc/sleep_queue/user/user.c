@@ -9,14 +9,12 @@
 
 
 int main(int argc, char** argv){
-	if(argc < 3){
-		printf("Usage: %s <syscall number> <syscall number>\n", argv[0]);
+	if(argc < 2){
+		printf("Usage: %s <syscall number> \n", argv[0]);
 		return 0;
 	}
-	int code1 = atoi(argv[1]);
-	int code2 = atoi(argv[2]);
-	syscall(code1);
-	syscall(code2);		
+	int code = atoi(argv[1]);
+	syscall(code);	
 	return 0;
 }
 
