@@ -111,6 +111,7 @@ asmlinkage long sys_awake(void){
                   preempt_enable();
                   return -1;
         }
+        printk("%s: Awakening thread %d\n",MODNAME, head.next->pid);
         head.next->awake = 1;
         wake_up_process(head.next->task);
         spin_unlock(&queue_lock);
